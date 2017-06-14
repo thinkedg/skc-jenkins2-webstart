@@ -4,24 +4,41 @@ services:
 
   data:
     build: jenkins-data
-
+    networks:
+      - skc-jenkins
+      
   master:
     build: jenkins-master
     volumes_from:
       - data
     ports:
       - "50000:50000"
-
+    networks:
+      - skc-jenkins
+      
   nginx:
     build: jenkins-nginx
     ports:
       - "80:80"
     links:
       - master:jenkins-master
+    networks:
+      - skc-jenkins
 
-  slave:
-    build: jenkins-slave
-
-  ssh-slave:
+  slave1:
     build: jenkins-slave-ssh
+    networks:
+      - skc-jenkins
+
+  slave2:
+    build: jenkins-slave
+    networks:
+      - skc-jenkins
+
+networks:
+  skc-jenkins:
+    driver: bridge
+
+  # ssh-slave:
+  #   build: jenkins-slave-ssh
 
